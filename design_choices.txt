@@ -1,0 +1,37 @@
+### Design Choices for ANN BP Network
+### By: Chris Maltais - 10155183
+
+Initial weights: Small weights between -1 and 1 were chosen so as to not have a large initial effect on the activation function. Weights are changed per epoch as opposed to per-pattern
+
+Node output function: Sigmoid function was used because it is between 0 and 1 and is differentiable at all times. In hindsight, a softmax function could have been used and could have been more effective due to the multi-classification nature of the problem
+
+Learning Rate: 0.01 after trial and error of tweaking the parameter, this value yielded best results
+
+Termination Criteria: Either a training accuracy or 5000 epochs, whichever comes first
+
+Number of Layers used: 3 Layers -> 1: Input, 2: Hidden, 3: Output. More hidden layers comes with a performance cost that was not necessary for this type of problem
+
+Number of Nodes used per layer:
+Input Layer -> 9 nodes, one for each feature input
+Hidden Layer -> 8 nodes, read online that a good estimate is mean(num_nodes_input, num_nodes_output). Could have used 7 nodes, might have made a differences
+Output Layer -> 6 nodes, one for each category of glass possible
+
+Momentum parameter value: 0.2 after trial and error of tweaking the parameter, this yielded best results
+
+Regularization Approach: Did not use.
+
+Data Preprocessing: All input data was standardized by removing mean and scaling to unit variance using sklearn's StandardScaler function
+
+Training/Validation/Testing Split: 
+- The initial data was split into 85% training and 15% testing
+- The resulting training data was then split again to result in 70/15/15 training/validation/testing split, respectively
+- These splits were done using the "train_test_split" function from the sklearn library, using the "stratify" argument to enable stratified sampling
+- Stratified sampling ensures the data split is mutually exclusive (i.e. every glass element is assigned to only one stratum) and collectively exhaustive (i.e. no glass element can be excluded) 
+- This ensures accurate distribution of samples across training/validation/testing
+
+Notes:
+- Validation dataset was not used (due to time)
+    - Validation dataset is used to tune hyperparameters of the model
+    - Training dataset would tune weights
+    - Validation dataset would keep set weights found in training, and iterate over hyperparameters (learning rate, mu, etc.) to find the best combination of hyperparameters (therefore no backprop is used!)
+    - These final hyperparameters and weights would be used against the testing data for a final model evaluation
